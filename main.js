@@ -80,6 +80,40 @@ app.post('/usuario', (req, response) => {
   response.send({empleados: dataset.empleados });
 })
 
+// Patch para editar un usuario existente
+app.patch('/usuario/:id', (req, response) => {
+  const { id } = req.params;
+  const { nombre } = req.body;
+  const empleadoDB = dataset.empleados.find((empleado) => empleado.id === Number(id) );
+
+  if(!empleadoDB) return response.json('No hay usuarios')
+
+  empleadoDB.name = nombre;
+
+  response.send({empleado: empleadoDB });
+})
+
+// Endpoint para traerme todos los usuarios
+app.get('/usuarios', (req, response) => {
+  response.send({empleados: dataset.empleados });
+})
+
+app.delete('/usuario/:id', (req, response) => {
+  const { id } = req.params;
+  
+  const empleadoDB = dataset.empleados.find((empleado) => empleado.id === Number(id) );
+  console.log('empleado:' , empleadoDB)
+  if(!empleadoDB) return response.json('No hay usuarios')
+  
+  const removeItem = dataset.empleados.indexOf(empleadoDB);
+  console.log('item:', removeItem)
+
+  dataset.empleados.splice(removeItem, 1)
+
+  response.send({empleados: dataset.empleados });
+
+})
+
 // Escuchando y leyendo todo lo que pasa en el puerto.
 app.listen(4000, () => {
   console.log('Server on port 4000'.cyan);
